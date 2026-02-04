@@ -7,39 +7,39 @@ services:
   # Base de donnees PostgreSQL
   db:
     image: postgres:15-alpine
-    container_name: video_analytics_db_dev
+    container_name: lecture_video_db_dev
     environment:
-      POSTGRES_DB: video_analytics
+      POSTGRES_DB: lecture_video
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: devpassword
     volumes:
-      - postgres_data_dev:/var/lib/postgresql/data
+      - lecture_video_postgres_data_dev:/var/lib/postgresql/data
       - ./database.sql:/docker-entrypoint-initdb.d/init.sql:ro
     ports:
-      - "5432:5432"
+      - "5433:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d video_analytics"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d lecture_video"]
       interval: 10s
       timeout: 5s
       retries: 5
     networks:
-      - video_network_dev
+      - lecture_video_network_dev
 
   # API Backend avec hot-reload
   api:
     image: python:3.11-slim
-    container_name: video_analytics_api_dev
+    container_name: lecture_video_api_dev
     working_dir: /app
     environment:
       DB_HOST: db
       DB_PORT: 5432
-      DB_NAME: video_analytics
+      DB_NAME: lecture_video
       DB_USER: postgres
       DB_PASSWORD: devpassword
     volumes:
       - ./server:/app
     ports:
-      - "8000:8000"
+      - "8001:8000"
     depends_on:
       db:
         condition: service_healthy
@@ -47,16 +47,16 @@ services:
       bash -c "pip install -r requirements.txt &&
                uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
     networks:
-      - video_network_dev
+      - lecture_video_network_dev
 
   # Dashboard avec hot-reload
   dashboard:
     image: node:20-alpine
-    container_name: video_analytics_dashboard_dev
+    container_name: lecture_video_dashboard_dev
     working_dir: /app
     volumes:
       - ./dashboard:/app
-      - dashboard_node_modules:/app/node_modules
+      - lecture_video_node_modules:/app/node_modules
     ports:
       - "3000:3000"
     depends_on:
@@ -64,14 +64,14 @@ services:
     command: >
       sh -c "npm install && npm run dev -- --host 0.0.0.0"
     networks:
-      - video_network_dev
+      - lecture_video_network_dev
 
 volumes:
-  postgres_data_dev:
+  lecture_video_postgres_data_dev:
     driver: local
-  dashboard_node_modules:
+  lecture_video_node_modules:
     driver: local
 
 networks:
-  video_network_dev:
+  lecture_video_network_dev:
     driver: bridge

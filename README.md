@@ -196,9 +196,9 @@ docker-compose logs -f
 ```
 
 Services disponibles:
-- **Dashboard**: http://localhost (port 80)
-- **API**: http://localhost:8000
-- **PostgreSQL**: localhost:5432
+- **Dashboard**: http://localhost:8080
+- **API**: http://localhost:8001
+- **PostgreSQL**: localhost:5433
 
 ### Developpement (avec hot-reload)
 
@@ -208,7 +208,8 @@ docker-compose -f docker-compose.dev.yml up
 
 Services en mode dev:
 - **Dashboard**: http://localhost:3000 (hot-reload)
-- **API**: http://localhost:8000 (hot-reload)
+- **API**: http://localhost:8001 (hot-reload)
+- **PostgreSQL**: localhost:5433
 
 ### Commandes utiles
 

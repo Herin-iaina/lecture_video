@@ -4,42 +4,42 @@ services:
   # Base de donnees PostgreSQL
   db:
     image: postgres:15-alpine
-    container_name: video_analytics_db
+    container_name: lecture_video_db
     restart: unless-stopped
     environment:
-      POSTGRES_DB: ${DB_NAME:-video_analytics}
+      POSTGRES_DB: ${DB_NAME:-lecture_video}
       POSTGRES_USER: ${DB_USER:-postgres}
       POSTGRES_PASSWORD: ${DB_PASSWORD:-changeme}
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - lecture_video_postgres_data:/var/lib/postgresql/data
       - ./database.sql:/docker-entrypoint-initdb.d/init.sql:ro
     ports:
-      - "5432:5432"
+      - "5433:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-video_analytics}"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-lecture_video}"]
       interval: 10s
       timeout: 5s
       retries: 5
     networks:
-      - video_network
+      - lecture_video_network
 
   # API Backend FastAPI
   api:
     build:
       context: ./server
       dockerfile: Dockerfile
-    container_name: video_analytics_api
+    container_name: lecture_video_api
     restart: unless-stopped
     environment:
       DB_HOST: db
       DB_PORT: 5432
-      DB_NAME: ${DB_NAME:-video_analytics}
+      DB_NAME: ${DB_NAME:-lecture_video}
       DB_USER: ${DB_USER:-postgres}
       DB_PASSWORD: ${DB_PASSWORD:-changeme}
       API_HOST: 0.0.0.0
       API_PORT: 8000
     ports:
-      - "8000:8000"
+      - "8001:8000"
     depends_on:
       db:
         condition: service_healthy
@@ -50,26 +50,26 @@ services:
       retries: 3
       start_period: 10s
     networks:
-      - video_network
+      - lecture_video_network
 
   # Dashboard Frontend React
   dashboard:
     build:
       context: ./dashboard
       dockerfile: Dockerfile
-    container_name: video_analytics_dashboard
+    container_name: lecture_video_dashboard
     restart: unless-stopped
     ports:
-      - "80:80"
+      - "8080:80"
     depends_on:
       - api
     networks:
-      - video_network
+      - lecture_video_network
 
 volumes:
-  postgres_data:
+  lecture_video_postgres_data:
     driver: local
 
 networks:
-  video_network:
+  lecture_video_network:
     driver: bridge
