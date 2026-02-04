@@ -1,0 +1,11 @@
+# Dependencies for Video Client (Borne)
+# Install with: pip install -r requirements.txt
+
+# Serial communication with Arduino
+pyserial>=3.5
+
+# HTTP client for API communication
+requests>=2.31.0
+
+# Environment variables management (optional)
+python-dotenv>=1.0
