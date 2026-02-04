@@ -53,6 +53,11 @@ videoMPMLinux/
 │   ├── requirements.txt   # Dependances client
 │   └── .env.example       # Configuration client
 │
+├── dashboard/              # Interface web React
+│   ├── src/               # Code source
+│   ├── package.json       # Dependances npm
+│   └── README.md          # Documentation
+│
 ├── main.cpp               # Firmware Arduino
 ├── database.sql           # Schema initial
 └── service.ini            # Service SystemD (client)
@@ -109,6 +114,28 @@ mkdir -p videos/{A,B,C,D,E,F,G}
 python main.py
 ```
 
+### Dashboard (interface web)
+
+```bash
+cd dashboard/
+
+# Installer les dependances
+npm install
+
+# Lancer en developpement
+npm run dev
+# Accessible sur http://localhost:3000
+
+# Build pour production
+npm run build
+```
+
+**Fonctionnalites:**
+- Filtrage par machine et periode
+- Graphiques interactifs (barres, camembert, courbe)
+- Tableau de donnees triable
+- Export XLSX et CSV
+
 ### Arduino
 
 Flasher `main.cpp` sur l'Arduino.
@@ -152,7 +179,54 @@ Flasher `main.cpp` sur l'Arduino.
 | GET | `/stats/live` | Temps reel |
 | GET | `/health` | Etat du serveur |
 
-## Deploiement production
+## Deploiement Docker
+
+### Production (recommande)
+
+```bash
+# Configurer les variables d'environnement
+cp .env.example .env
+nano .env  # Modifier DB_PASSWORD
+
+# Lancer tous les services
+docker-compose up -d
+
+# Verifier les logs
+docker-compose logs -f
+```
+
+Services disponibles:
+- **Dashboard**: http://localhost (port 80)
+- **API**: http://localhost:8000
+- **PostgreSQL**: localhost:5432
+
+### Developpement (avec hot-reload)
+
+```bash
+docker-compose -f docker-compose.dev.yml up
+```
+
+Services en mode dev:
+- **Dashboard**: http://localhost:3000 (hot-reload)
+- **API**: http://localhost:8000 (hot-reload)
+
+### Commandes utiles
+
+```bash
+# Arreter les services
+docker-compose down
+
+# Rebuild les images
+docker-compose build --no-cache
+
+# Voir les logs d'un service
+docker-compose logs -f api
+
+# Supprimer les volumes (reset DB)
+docker-compose down -v
+```
+
+## Deploiement production (sans Docker)
 
 ### Serveur (SystemD)
 

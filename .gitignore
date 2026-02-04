@@ -47,3 +47,35 @@ videos/
 # Local config
 .env.local
 .env.production
+
+# Node.js
+node_modules/
+dashboard/dist/
+npm-debug.log
+yarn-error.log
+
+# Video player database (if any)
+video_analytics.db
+
+# video files
+*.mp4
+*.avi
+*.mkv
+*.mov
+*.flv
+*.wmv
+*.webm
+*.mpeg
+*.mpg
+*.ts
+*.m4v
+*.m4a
+*.m4p
+*.m4b
+*.m4r
+*.m4s
+*.m4u
+*.m4v
+*.m4t
+*.m4m
+*.m4
