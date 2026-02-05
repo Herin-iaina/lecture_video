@@ -189,10 +189,10 @@ cp .env.example .env
 nano .env  # Modifier DB_PASSWORD
 
 # Lancer tous les services
-docker-compose up -d
+docker compose up -d
 
 # Verifier les logs
-docker-compose logs -f
+docker compose logs -f
 ```
 
 Services disponibles:
@@ -203,7 +203,7 @@ Services disponibles:
 ### Developpement (avec hot-reload)
 
 ```bash
-docker-compose -f docker-compose.dev.yml up
+docker compose -f docker-compose.dev.yml up
 ```
 
 Services en mode dev:
@@ -215,16 +215,16 @@ Services en mode dev:
 
 ```bash
 # Arreter les services
-docker-compose down
+docker compose down
 
 # Rebuild les images
-docker-compose build --no-cache
+docker compose build --no-cache
 
 # Voir les logs d'un service
-docker-compose logs -f api
+docker compose logs -f api
 
 # Supprimer les volumes (reset DB)
-docker-compose down -v
+docker compose down -v
 ```
 
 ## Deploiement production (sans Docker)
